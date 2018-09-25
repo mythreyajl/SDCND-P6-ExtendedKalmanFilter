@@ -25,8 +25,8 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
     // Return if estimations and ground truth don't match
     if( estimations.size() != ground_truth.size() )
     {
-    std::cout << "Mismatch in size of estimations and ground truth." << std::endl;
-    return rmse;
+        std::cout << "Mismatch in size of estimations and ground truth." << std::endl;
+        return rmse;
     }
 
     // Accumulating errors across all measurements
