@@ -43,8 +43,8 @@ FusionEKF::FusionEKF() {
     ekf_.P_ = Eigen::MatrixXd(4, 4);
     ekf_.P_ << 1, 0, 0, 0,
                0, 1, 0, 0,
-               0, 0, 1, 0,
-               0, 0, 0, 1;
+               0, 0, 1000, 0,
+               0, 0, 0, 1000;
     ekf_.R_ = Eigen::MatrixXd(3, 3);
 }
 
