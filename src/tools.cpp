@@ -49,6 +49,9 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
     // Initializing the result vector
     MatrixXd Hj(3, 4);
+    Hj << 0, 0, 0, 0,
+          0, 0, 0, 0,
+          0, 0, 0, 0;
 
     // Getting references of state for ease of coding
     const double& px = x_state(0);
@@ -58,21 +61,21 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 
     // Precalculate the deniominator position vector and
     // its powers for ease of representation in code
-    double den = sqrt( px * px + py * py );
-    double den2 = den * den;
-    double den3 = den * den2;
-    if( den == 0 )
+    double den1 = sqrt( px * px + py * py );
+    double den2 = den1 * den1;
+    double den3 = den1 * den2;
+    if( den1 == 0 )
         std::cout << "Error, division by 0." << std::endl;
 
     // Assigning the values according to the Jacobean calculation
-    Hj(0, 0) = px / den;
-    Hj(0, 1) = py / den;
+    Hj(0, 0) = px / den1;
+    Hj(0, 1) = py / den1;
     Hj(1, 0) = -py / den2;
     Hj(1, 1) = px / den2;
     Hj(2, 0) = py * ( vx * py - vy * px ) / den3;
     Hj(2, 1) = px * ( vy * px - vx * py ) / den3;
-    Hj(2, 2) = px / den;
-    Hj(2, 3) = py / den;
+    Hj(2, 2) = px / den1;
+    Hj(2, 3) = py / den1;
 
     return Hj;
 }

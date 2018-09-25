@@ -1,4 +1,5 @@
 #include "kalman_filter.h"
+#include <iostream>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -21,8 +22,11 @@ void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
 }
 
 void KalmanFilter::Predict() {
+    std::cout << "x_ b4:" << std::endl << x_ << std::endl;
     x_ = F_ * x_;
+    std::cout << "x_ after:" << std::endl << x_ << std::endl;
     P_ = F_ * P_ * F_.transpose() + Q_;
+    std::cout << "P_ predicted:" << std::endl << P_ << std::endl;
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
@@ -32,11 +36,13 @@ void KalmanFilter::Update(const VectorXd &z) {
     MatrixXd S = H_ * P_ * Ht + R_;
     MatrixXd PHt = P_ * Ht;
     MatrixXd K = PHt * S.inverse();
+    std::cout << "K measured LiDAR:" << std::endl << P_ << std::endl;
 
     x_ = x_ + K * y;
     long x_size = x_.size();
     MatrixXd I = MatrixXd::Identity(x_size, x_size);
     P_ = (I - K * H_) * P_;
+    std::cout << "P_ measured LiDAR:" << std::endl << P_ << std::endl;
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
@@ -44,12 +50,15 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
     VectorXd z_pred = Hj * x_;
     VectorXd y = z - z_pred;
     MatrixXd Ht = Hj.transpose();
-    MatrixXd S = Hj * P_ * Hj + R_;
-    MatrixXd PHt = P_ * Hj;
+    MatrixXd S = Hj * P_ * Ht + R_;
+    MatrixXd PHt = P_ * Ht;
     MatrixXd K = PHt * S.inverse();
+    std::cout << "K measured RADAR:" << std::endl << P_ << std::endl;
+
 
     x_ = x_ + K * y;
     long x_size = x_.size();
     MatrixXd I = MatrixXd::Identity(x_size, x_size);
     P_ = (I - K * Hj) * P_;
+    std::cout << "P_ measured RADAR:" << std::endl << P_ << std::endl;
 }
