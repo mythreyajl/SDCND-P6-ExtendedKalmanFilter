@@ -48,9 +48,9 @@ void KalmanFilter::Update(const VectorXd &z) {
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
     auto& Hj = H_;
     VectorXd z_pred = Eigen::VectorXd(3);
-    z_pred(0) = sqrt(x_(0)*x_(0) + x_(1) * x_(1));
+    z_pred(0) = sqrt(x_(0) * x_(0) + x_(1) * x_(1));
     z_pred(1) = atan2(x_(1), x_(0));
-    z_pred(2) = (x_(0)*x_(2) + x_(1) * x_(3))/z_pred(0);
+    z_pred(2) = (x_(0) * x_(2) + x_(1) * x_(3))/z_pred(0);
     VectorXd y = z - z_pred;
     MatrixXd Ht = Hj.transpose();
     MatrixXd S = Hj * P_ * Ht + R_;
