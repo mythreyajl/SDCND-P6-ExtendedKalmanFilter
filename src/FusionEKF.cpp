@@ -23,28 +23,28 @@ FusionEKF::FusionEKF() {
     Hj_      = MatrixXd(3, 4);
 
     //measurement covariance matrix - laser
-    R_laser_ << 0.0225,      0,
-              0,      0.0225;
+    R_laser_ << 0.0225, 0,
+                0, 0.0225;
 
     //measurement covariance matrix - radar
-    R_radar_ << 0.09,      0,    0,
-              0,    0.0009,    0,
-              0,         0, 0.09;
+    R_radar_ << 0.09, 0, 0,
+                0, 0.0009, 0,
+                0, 0, 0.09;
 
     H_laser_ << 1, 0, 0, 0,
-              0, 1, 0, 0;
+                0, 1, 0, 0;
 
     Hj_      << 0, 0, 0, 0,
-              0, 0, 0, 0,
-              0, 0, 0, 0;
+                0, 0, 0, 0,
+                0, 0, 0, 0;
 
     // EKF Initialization
     ekf_.F_ = Eigen::MatrixXd::Identity(4, 4);
     ekf_.P_ = Eigen::MatrixXd(4, 4);
     ekf_.P_ << 1, 0, 0, 0,
                0, 1, 0, 0,
-               0, 0, 1000, 0,
-               0, 0, 0, 1000;
+               0, 0, 1, 0,
+               0, 0, 0, 1;
     ekf_.R_ = Eigen::MatrixXd(3, 3);
 }
 
@@ -106,7 +106,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     // Updating the state transition matrix according to delta time
     ekf_.F_(0, 2) = dt;
     ekf_.F_(1, 3) = dt;
-    std::cout << "F_:" << std::endl << ekf_.F_ << std::endl;
 
     // Process noise variance
     double noise_ax = 9;
@@ -123,7 +122,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
                 0, dt_4/4*noise_ay, 0, dt_3/2*noise_ay,
                 dt_3/2*noise_ax, 0, dt_2*noise_ax, 0,
                 0, dt_3/2*noise_ay, 0, dt_2*noise_ay;
-    std::cout << "Q_:" << std::endl << ekf_.Q_ << std::endl;
 
     // Prediction
     ekf_.Predict();

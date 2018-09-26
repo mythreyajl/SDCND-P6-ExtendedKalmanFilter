@@ -64,8 +64,10 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
     double den1 = sqrt( px * px + py * py );
     double den2 = den1 * den1;
     double den3 = den1 * den2;
-    if( den1 == 0 )
+    if( den1 == 0 ) {
         std::cout << "Error, division by 0." << std::endl;
+        return Hj;
+    }
 
     // Assigning the values according to the Jacobean calculation
     Hj(0, 0) = px / den1;
