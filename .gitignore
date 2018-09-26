@@ -35,4 +35,4 @@
 *.app
 
 # Folders
-build/
+build*/
